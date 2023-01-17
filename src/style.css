@@ -1,0 +1,60 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+:root {
+  --main-color: #3b9275;
+  --color2: #c48298;
+  --color3: #f1d761;
+  --dark: #3d3d3d;
+  --darker: #2b2b2b;
+  --gray-border: rgb(179, 179, 179);
+  --text-white: #ebebeb;
+  --button-border: #2e745c;
+  --button-text: #000000;
+  --userfont: roboto, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  max-height: max-content;
+  background-color: rgb(56, 59, 59);
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: var(--button-text);
+}
+
+.body__container {
+  padding: 1rem auto;
+}
