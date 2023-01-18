@@ -1,7 +1,6 @@
 class CarMethod {
-  constructor() {}
-
-  randomValueFromData(data: string[] | string): string {
+  // eslint-disable-next-line class-methods-use-this
+  randomValueFromData({ data }: { data: string[] | string }): string {
     return data[Math.floor(Math.random() * data.length)];
   }
 
@@ -9,7 +8,7 @@ class CarMethod {
     const strColorHEX = 'abcdef0123456789';
     const arrCurentColor = [];
     for (let i = 0; i < 6; i += 1) {
-      arrCurentColor.push(this.randomValueFromData(strColorHEX));
+      arrCurentColor.push(this.randomValueFromData({ data: strColorHEX }));
     }
     return `#${arrCurentColor.join('')}`;
   }
@@ -64,8 +63,9 @@ class CarMethod {
       'V60',
       'V90',
     ];
-    return `${this.randomValueFromData(arrCarBrand)} ${this.randomValueFromData(arrCarModel)}`;
+    return `${this.randomValueFromData({ data: arrCarBrand })} ${this.randomValueFromData({ data: arrCarModel })}`;
   }
+
   newRandomCar() {
     const car = {
       name: this.randomCarName(),

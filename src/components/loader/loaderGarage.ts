@@ -1,24 +1,30 @@
-import { Car } from '../car/car';
+import { ICar } from '../../types';
 
 class LoaderGarage {
   serverPath: string;
+
   paramsPage: string;
+
   paramsLimit: string;
+
   garage: string;
-  car: any;
+
+  car: ICar | undefined;
+
   constructor() {
     this.serverPath = 'http://127.0.0.1:3000/';
     this.garage = 'garage';
     this.paramsPage = '_page';
     this.paramsLimit = '_limit';
   }
-  async getCars(page: number, limit: number) {
+
+  async getCars(page?: number, limit?: number): Promise<ICar[]> {
     const response: Response = await fetch(
       `${this.serverPath}${this.garage}?${this.paramsPage}=${page}&${this.paramsLimit}=${limit}`,
     );
     const garageData = await response.json();
-    // response.headers.set("X-Total-Count", `7`);
     console.log(garageData);
+    return garageData;
   }
 
   async getCar(id: number) {
@@ -27,7 +33,7 @@ class LoaderGarage {
     console.log(garageData);
   }
 
-  async createCar(body: {}) {
+  async createCar(body: ICar) {
     const response: Response = await fetch(`${this.serverPath}${this.garage}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
