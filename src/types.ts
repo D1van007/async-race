@@ -14,3 +14,5 @@ export interface ICarProperties {
   velocity: number;
   distance: number;
 }
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export type errorCallback = () => void;

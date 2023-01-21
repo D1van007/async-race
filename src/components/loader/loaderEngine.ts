@@ -1,4 +1,4 @@
-import { Engine, ICarProperties } from '../../types';
+import { Engine, ICarProperties, errorCallback } from '../../types';
 
 class LoaderEngine {
   serverPath: string;
@@ -28,16 +28,15 @@ class LoaderEngine {
       );
 
       const velocityCar = await response.json();
-      // console.log(velocityCar);
       return velocityCar;
     } catch (err) {
       console.error(err);
     }
   }
 
-  async driveCar(id: number, status: Engine) {
+  async driveCar(id: number, status: Engine, callback?: errorCallback) {
     try {
-      this.startStopEngine(id, Engine.started);
+      // this.startStopEngine(id, Engine.started);
       const response: Response = await fetch(
         `${this.serverPath}${this.engine}?${this.paramsId}=${id}&${this.paramsStatus}=${status}`,
         {
@@ -48,9 +47,8 @@ class LoaderEngine {
 
       const driveCar = await response.json();
       console.log(driveCar);
-    } catch (err) {
-      // eslint-disable-next-line no-alert
-      console.error(err);
+    } catch {
+      if (callback) callback();
     }
   }
 }

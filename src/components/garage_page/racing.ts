@@ -2,7 +2,7 @@ import { renderButtonHTML } from '../button/buttonFunc';
 // import { loaderGarage } from '../loader/loaderGarage';
 import { carPicture } from './svg_car';
 // import { ininElementQueryClass } from './init_Element_DOM';
-import { Engine, ICarProperties } from '../../types';
+import { Engine, errorCallback, ICarProperties } from '../../types';
 import { loaderEngine } from '../loader/loaderEngine';
 
 export class Racing {
@@ -78,16 +78,11 @@ export class Racing {
 
   initDOMElement() {
     this.racingLine = document.querySelector(`#racing__content-${this.id}`) as HTMLElement;
-    console.log(this.racingLine);
     this.btnSelect = document.querySelector('.race__btn--select') as HTMLButtonElement;
     this.btnRemove = this.racingLine.querySelector('.race__btn--remove') as HTMLButtonElement;
     this.btnStart = this.racingLine.querySelector('.car__btn--a') as HTMLElement;
-
     this.btnStop = this.racingLine.querySelector('.car__btn--b') as HTMLElement;
     this.carPicture = this.racingLine.querySelector('.car__picture') as HTMLElement;
-    console.log(this.btnStart);
-    console.log(this.btnStop);
-    console.log(this.carPicture.offsetWidth);
   }
 
   async startMove() {
@@ -96,6 +91,7 @@ export class Racing {
     this.timeAnimation = this.carProperty!.distance / this.carProperty!.velocity;
     this.animationMove(this.timeAnimation);
     this.carAnimationMove.play();
+    loaderEngine.driveCar(this.id, Engine.drive, () => this.carAnimationMove.pause() as unknown as errorCallback);
   }
 
   animationMove(time: number) {
