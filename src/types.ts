@@ -9,3 +9,8 @@ export interface ICar {
   color: string;
   id?: number;
 }
+
+export interface ICarProperties {
+  velocity: number;
+  distance: number;
+}
