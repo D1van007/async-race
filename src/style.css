@@ -44,7 +44,15 @@ ol[class] {
   list-style: none;
   padding: 0;
 }
-
+button {
+  cursor: pointer;
+}
+button:hover {
+  scale: 1.05;
+}
+button:disabled:hover {
+  scale: 1;
+}
 img {
   max-width: 100%;
   display: block;
@@ -56,7 +64,30 @@ a {
 }
 
 .body__container {
-  padding: 1rem auto;
+  margin: 1rem;
+}
+.header {
+  display: flex;
+  height: 2rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.creator-car__content,
+.updater-car__content,
+.race-control__content {
+  display: flex;
+  gap: 0.5rem;
+}
+.racing__title,
+.racing__page-number,
+.winners__content--title,
+.winners__content--page-number {
+  margin: 0.5rem 0;
+}
+.garage__content--control-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 .racing__list-cars {
   display: flex;
@@ -98,10 +129,19 @@ a {
   grid-template-columns: 1fr;
   width: 100%;
 }
-.winners__content--item {
+.winners__content--item,
+.winners__content--title {
   display: grid;
   grid-template-columns: 0.3fr 1fr 2fr 0.5fr 1fr;
   width: 100%;
   align-items: center;
   justify-items: center;
+}
+
+.winners__content--pagination,
+.garage__content--pagination {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem auto;
 }

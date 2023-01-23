@@ -28,7 +28,7 @@ export class TableWinners {
   }
 
   async asyncRenderTable(page: number, limit: number) {
-    const titleWinnersDOM = document.querySelector('.winners__content--title') as HTMLElement;
+    const titleWinnersDOM = document.querySelector('.winners__content--amount') as HTMLElement;
     const pageWinnersDOM = document.querySelector('.winners__content--page-number') as HTMLElement;
     const allWinners = (await loaderWinners.getWinners()).length;
     pageWinnersDOM.textContent = `Page #${String(page)}`;
