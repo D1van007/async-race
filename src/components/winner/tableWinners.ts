@@ -2,7 +2,6 @@ import { carPicture } from '../garage_page/svg_car';
 // eslint-disable-next-line import/no-cycle
 import { loaderGarage } from '../loader/loaderGarage';
 import { loaderWinners } from '../loader/loaderWinners';
-import { saveValue } from '../save/save';
 
 export class TableWinners {
   parent!: HTMLElement;

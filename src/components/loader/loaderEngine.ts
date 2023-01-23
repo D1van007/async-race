@@ -28,15 +28,15 @@ class LoaderEngine {
         },
       );
 
-      const velocityCar = await response.json();
-      return velocityCar;
-    } catch (err) {
-      console.error(err);
+      const velocityCar: Promise<ICarProperties | undefined> = await response.json();
+      return await velocityCar;
+    } catch {
+      throw new Error('ошибочка');
     }
   }
 
   // eslint-disable-next-line consistent-return
-  async driveCar(id: number, status: Engine, callback?: errorCallback): Promise<drivePromice | undefined> {
+  async driveCar(id: number, status: Engine, callback?: errorCallback): Promise<drivePromice | undefined | void> {
     try {
       // this.startStopEngine(id, Engine.started);
       const controller = new AbortController();

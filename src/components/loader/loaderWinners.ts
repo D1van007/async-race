@@ -53,7 +53,7 @@ class LoaderWinners {
     const response: Response = await fetch(`${this.serverPath}${this.winners}/${id}`, {
       method: 'DELETE',
     });
-    const winnersData = await response.json();
+    await response.json();
   }
 
   async createWinner(body: IWinner) {
@@ -62,7 +62,7 @@ class LoaderWinners {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
-    const winnersData = await response.json();
+    await response.json();
   }
 
   async updateWinner(id: number, currentWins: number, currentTime: number) {
@@ -74,7 +74,7 @@ class LoaderWinners {
         time: currentTime,
       }),
     });
-    const winnerData = await response.json();
+    await response.json();
   }
 }
 

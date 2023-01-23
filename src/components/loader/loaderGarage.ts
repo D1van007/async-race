@@ -50,7 +50,7 @@ class LoaderGarage {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
-      const garageData = await response.json();
+      await response.json();
     } catch {
       throw new Error('ошибочка');
     }
@@ -61,7 +61,7 @@ class LoaderGarage {
       const response: Response = await fetch(`${this.serverPath}${this.garage}/${id}`, {
         method: 'DELETE',
       });
-      const garageData = await response.json();
+      await response.json();
     } catch {
       throw new Error('ошибочка');
     }
@@ -77,7 +77,7 @@ class LoaderGarage {
           color: `${color}`,
         }),
       });
-      const garageData = await response.json();
+      await response.json();
     } catch {
       throw new Error('ошибочка');
     }
