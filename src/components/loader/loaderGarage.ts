@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import { ICar } from '../../types';
 
 class LoaderGarage {
@@ -19,49 +20,67 @@ class LoaderGarage {
   }
 
   async getCars(page?: number, limit?: number): Promise<ICar[]> {
-    const response: Response = await fetch(
-      `${this.serverPath}${this.garage}?${this.paramsPage}=${page}&${this.paramsLimit}=${limit}`,
-    );
-    const garageData = await response.json();
-    console.log(garageData);
-    return garageData;
+    try {
+      const response: Response = await fetch(
+        `${this.serverPath}${this.garage}${
+          page || limit ? `?${this.paramsPage}=${page}&${this.paramsLimit}=${limit}` : ''
+        }`,
+      );
+      const garageData = await response.json();
+      return garageData;
+    } catch {
+      throw new Error('ошибочка');
+    }
   }
 
-  async getCar(id: number) {
-    const response: Response = await fetch(`${this.serverPath}${this.garage}/${id}`);
-    const garageData = await response.json();
-    console.log(garageData);
+  async getCar(id: number): Promise<ICar> {
+    try {
+      const response: Response = await fetch(`${this.serverPath}${this.garage}/${id}`);
+      const garageData = await response.json();
+      return garageData;
+    } catch {
+      throw new Error('ошибочка');
+    }
   }
 
   async createCar(body: ICar) {
-    const response: Response = await fetch(`${this.serverPath}${this.garage}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    const garageData = await response.json();
-    console.log(garageData);
+    try {
+      const response: Response = await fetch(`${this.serverPath}${this.garage}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const garageData = await response.json();
+    } catch {
+      throw new Error('ошибочка');
+    }
   }
 
   async deleteCar(id: number) {
-    const response: Response = await fetch(`${this.serverPath}${this.garage}/${id}`, {
-      method: 'DELETE',
-    });
-    const garageData = await response.json();
-    console.log(garageData);
+    try {
+      const response: Response = await fetch(`${this.serverPath}${this.garage}/${id}`, {
+        method: 'DELETE',
+      });
+      const garageData = await response.json();
+    } catch {
+      throw new Error('ошибочка');
+    }
   }
 
   async updateCar(id: number, name: string, color: string) {
-    const response: Response = await fetch(`${this.serverPath}${this.garage}/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: `${name}`,
-        color: `${color}`,
-      }),
-    });
-    const garageData = await response.json();
-    console.log(garageData);
+    try {
+      const response: Response = await fetch(`${this.serverPath}${this.garage}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: `${name}`,
+          color: `${color}`,
+        }),
+      });
+      const garageData = await response.json();
+    } catch {
+      throw new Error('ошибочка');
+    }
   }
 }
 

@@ -1,4 +1,5 @@
-import { Engine, ICarProperties, errorCallback } from '../../types';
+// eslint-disable-next-line import/no-cycle
+import { Engine, ICarProperties, errorCallback, drivePromice } from '../../types';
 
 class LoaderEngine {
   serverPath: string;
@@ -34,19 +35,21 @@ class LoaderEngine {
     }
   }
 
-  async driveCar(id: number, status: Engine, callback?: errorCallback) {
+  // eslint-disable-next-line consistent-return
+  async driveCar(id: number, status: Engine, callback?: errorCallback): Promise<drivePromice | undefined> {
     try {
       // this.startStopEngine(id, Engine.started);
+      const controller = new AbortController();
       const response: Response = await fetch(
         `${this.serverPath}${this.engine}?${this.paramsId}=${id}&${this.paramsStatus}=${status}`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
         },
       );
-
-      const driveCar = await response.json();
-      console.log(driveCar);
+      const driveCar: drivePromice = await response.json();
+      return driveCar;
     } catch {
       if (callback) callback();
     }

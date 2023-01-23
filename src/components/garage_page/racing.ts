@@ -1,9 +1,15 @@
 import { renderButtonHTML } from '../button/buttonFunc';
-// import { loaderGarage } from '../loader/loaderGarage';
+// eslint-disable-next-line import/no-cycle
+import { asyncCreatRacing, canRacing } from './createRacigFunc';
 import { carPicture } from './svg_car';
-// import { ininElementQueryClass } from './init_Element_DOM';
-import { Engine, errorCallback, ICarProperties } from '../../types';
+// eslint-disable-next-line import/no-cycle
+import { loaderWinners } from '../loader/loaderWinners';
+// eslint-disable-next-line import/no-cycle
+import { drivePromice, Engine, errorCallback, ICarProperties } from '../../types';
 import { loaderEngine } from '../loader/loaderEngine';
+import { loaderGarage } from '../loader/loaderGarage';
+import { TableWinners } from '../winner/tableWinners';
+import { saveValue } from '../save/save';
 
 export class Racing {
   selector: HTMLElement;
@@ -26,9 +32,9 @@ export class Racing {
 
   btnRemove!: HTMLButtonElement;
 
-  btnStart!: HTMLElement;
+  btnStart!: HTMLButtonElement;
 
-  btnStop!: HTMLElement;
+  btnStop!: HTMLButtonElement;
 
   carPicture!: HTMLElement;
 
@@ -38,6 +44,20 @@ export class Racing {
 
   timeAnimation: number | undefined;
 
+  garageContainerDOM!: HTMLElement;
+
+  carNameDOM!: HTMLElement;
+
+  updateCarNameDOM!: HTMLInputElement;
+
+  updateCarColorDOM!: HTMLInputElement;
+
+  startRacingBtnDOM!: HTMLButtonElement;
+
+  resetRacingBtnDOM!: HTMLButtonElement;
+
+  isMoveCar = false;
+
   constructor(selector: HTMLElement, page: number, limit: number, id: number, name: string, color: string) {
     this.selector = selector;
     this.page = page;
@@ -45,7 +65,7 @@ export class Racing {
     this.id = id;
     this.name = name;
     this.color = color;
-    this.renderRace();
+    this.allAsyncMethod();
   }
 
   async allAsyncMethod() {
@@ -56,20 +76,18 @@ export class Racing {
 
   async renderRace() {
     this.selector.insertAdjacentHTML('beforeend', await this.createHTMLRace());
-    this.initDOMElement();
-    this.racingHandler();
   }
 
   async createHTMLRace(): Promise<string> {
-    return `<li class="racing__content" id="racing__content-${this.id}">
+    return `<li class="racing__content" id="${this.id}">
                 <div class="race__car-change">
-                    ${renderButtonHTML('SELECT', 'race__btn--select', '', '')}
-                    ${renderButtonHTML('REMOVE', 'race__btn--remove', '', '')}
+                    ${renderButtonHTML('SELECT', 'race__btn--select', '')}
+                    ${renderButtonHTML('REMOVE', 'race__btn--remove', '')}
                     <p class="race__car-name">${`${this.name}`}</p>
                 </div>
                 <div class="race__car-drive">
                     ${renderButtonHTML('A', `car__btn--a`, `car__btn--a-${this.id}`)}
-                    ${renderButtonHTML('B', `car__btn--b`, `car__btn--b-${this.id}`)}
+                    ${renderButtonHTML('B', `car__btn--b`, `car__btn--b-${this.id}`, 'disabled')}
                     ${carPicture('car__picture', this.color, `car__picture-${this.id}`)}
                     <img class="car__flag" src="src/assets/racing_flag.svg">
                 </div>
@@ -77,21 +95,50 @@ export class Racing {
   }
 
   initDOMElement() {
-    this.racingLine = document.querySelector(`#racing__content-${this.id}`) as HTMLElement;
+    this.garageContainerDOM = document.querySelector('.garage__container') as HTMLElement;
+    this.racingLine = document.getElementById(`${this.id}`) as HTMLElement;
     this.btnSelect = document.querySelector('.race__btn--select') as HTMLButtonElement;
     this.btnRemove = this.racingLine.querySelector('.race__btn--remove') as HTMLButtonElement;
-    this.btnStart = this.racingLine.querySelector('.car__btn--a') as HTMLElement;
-    this.btnStop = this.racingLine.querySelector('.car__btn--b') as HTMLElement;
+    this.btnStart = this.racingLine.querySelector('.car__btn--a') as HTMLButtonElement;
+    this.btnStop = this.racingLine.querySelector('.car__btn--b') as HTMLButtonElement;
     this.carPicture = this.racingLine.querySelector('.car__picture') as HTMLElement;
+    this.carNameDOM = this.racingLine.querySelector('.race__car-name') as HTMLElement;
+    this.updateCarNameDOM = this.garageContainerDOM.querySelector('.updater-car__input-text') as HTMLInputElement;
+    this.updateCarColorDOM = this.garageContainerDOM.querySelector('.updater-car__input-color') as HTMLInputElement;
+    this.startRacingBtnDOM = this.garageContainerDOM.querySelector('.race-control--race__btn') as HTMLButtonElement;
+    this.resetRacingBtnDOM = this.garageContainerDOM.querySelector('.race-control--reset__btn') as HTMLButtonElement;
   }
 
-  async startMove() {
+  // eslint-disable-next-line consistent-return
+  async startMove(isRacing = false): Promise<void | drivePromice> {
+    this.isMoveCar = true;
+    this.btnStart.disabled = true;
+    this.btnStop.disabled = false;
+    this.startRacingBtnDOM.disabled = true;
     this.carProperty = await loaderEngine.startStopEngine(this.id, Engine.started);
-    console.log(this.carProperty);
     this.timeAnimation = this.carProperty!.distance / this.carProperty!.velocity;
     this.animationMove(this.timeAnimation);
     this.carAnimationMove.play();
-    loaderEngine.driveCar(this.id, Engine.drive, () => this.carAnimationMove.pause() as unknown as errorCallback);
+    const data = await loaderEngine.driveCar(
+      this.id,
+      Engine.drive,
+      () => this.carAnimationMove.pause() as unknown as errorCallback,
+    );
+    try {
+      data!.instanceCar = this;
+      data!.time = +(this.timeAnimation / 1000).toFixed(2);
+    } catch {
+      if (isRacing) throw new Error('ошибочка');
+    }
+    return data;
+  }
+
+  async stopMove() {
+    this.isMoveCar = false;
+    this.btnStart.disabled = false;
+    this.btnStop.disabled = true;
+    await loaderEngine.startStopEngine(this.id, Engine.stopped);
+    this.carAnimationMove.cancel();
   }
 
   animationMove(time: number) {
@@ -109,15 +156,42 @@ export class Racing {
     this.carAnimationMove = new Animation(carKeyFrameMove);
   }
 
+  async deleteCar() {
+    await loaderGarage.deleteCar(this.id);
+    const archiveWinners = await loaderWinners.getWinners();
+    if (archiveWinners.some(e => e.id === Number(this.id))) {
+      console.log('ds');
+      await loaderWinners.deleteWinner(this.id);
+      // eslint-disable-next-line no-new
+      new TableWinners(saveValue.winnersPage, saveValue.winnersLimit);
+    }
+    asyncCreatRacing(this.page, this.limit);
+  }
+
+  selectCar() {
+    this.updateCarNameDOM.value = this.carNameDOM.textContent as string;
+    this.updateCarColorDOM.value = this.carPicture.getAttribute('fill') as string;
+    this.updateCarNameDOM.setAttribute('car-ID', `${this.id}`);
+    this.updateCarColorDOM.setAttribute('car-ID', `${this.id}`);
+  }
+
   racingHandler() {
-    this.racingLine.addEventListener('click', event => {
-      if ((<HTMLElement>event.target).classList.contains(`car__btn--a`) && this.timeAnimation === undefined) {
+    this.racingLine.addEventListener('click', async event => {
+      if ((<HTMLElement>event.target).classList.contains(`car__btn--a`)) {
         this.startMove();
-      } else if ((<HTMLElement>event.target).classList.contains(`car__btn--a`)) {
-        this.carAnimationMove.play();
       }
       if ((<HTMLElement>event.target).classList.contains(`car__btn--b`)) {
-        this.carAnimationMove.pause();
+        this.stopMove();
+        if (!canRacing()) {
+          this.startRacingBtnDOM.disabled = false;
+        }
+        this.stopMove();
+      }
+      if ((<HTMLElement>event.target).classList.contains(`race__btn--remove`)) {
+        this.deleteCar();
+      }
+      if ((<HTMLElement>event.target).classList.contains(`race__btn--select`)) {
+        this.selectCar();
       }
     });
   }

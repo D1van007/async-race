@@ -1,8 +1,9 @@
-import { ControlPanel } from './controlPanel';
-// import { Garage } from './garage';
-import { RacingContainer } from './racing_container';
-import { Racing } from './racing';
+import { renderButtonHTML } from '../button/buttonFunc';
 import { loaderGarage } from '../loader/loaderGarage';
+import { ControlPanel } from './controlPanel';
+import { asyncCreatRacing } from './createRacigFunc';
+import { saveValue } from '../save/save';
+import { resetRacing } from './resetRaceFunc';
 
 export class GaragePage {
   parent!: HTMLElement;
@@ -15,26 +16,27 @@ export class GaragePage {
 
   garageContainerDOM: HTMLElement;
 
-  // garage: Garage;
+  page = saveValue.carsPage;
 
-  page = 1;
-
-  limit = 7;
-
-  racingContainer: RacingContainer;
+  limit = saveValue.carsLimit;
 
   racingContainerDOM: HTMLElement;
+
+  racingContainer!: HTMLDivElement;
+
+  racingListDOM!: HTMLElement;
 
   constructor() {
     this.parent = document.querySelector('.main') as HTMLElement;
     this.createGaragePage();
     this.garageContainerDOM = this.parent.querySelector('.garage__container') as HTMLElement;
     this.controlPanel = new ControlPanel(this.garageContainerDOM);
-    this.racingContainer = new RacingContainer(this.garageContainerDOM);
-    this.racingContainerDOM = this.parent.querySelector('.racing__list-cars') as HTMLElement;
-    this.asyncCreatRacing().then(() => {
-      console.log(document.querySelector('#car__picture-3'));
-    });
+    this.createRacingContainer();
+    this.racingContainerDOM = this.parent.querySelector('.garage__content--racing') as HTMLElement;
+    this.renderTitleGarage();
+    this.racingListDOM = this.parent.querySelector('.racing__list-cars') as HTMLElement;
+    this.renderButtonPaginatin();
+    this.rerenderDOM();
   }
 
   createGaragePage() {
@@ -43,22 +45,58 @@ export class GaragePage {
     this.parent.append(this.garageContainer);
   }
 
-  async asyncCreatRacing() {
-    const arrCarsRace = await loaderGarage.getCars(this.page, this.limit);
-    const titleRacingDOM = document.querySelector('.racing__title') as HTMLElement;
-    const pageNumberDOM = document.querySelector('.racing__page-number') as HTMLElement;
-    pageNumberDOM.textContent = `Page #${String(this.page)}`;
-    titleRacingDOM.textContent = `Garage (${String(arrCarsRace.length)})`;
-    for (let i = 0; i < arrCarsRace.length; i += 1) {
-      // eslint-disable-next-line no-new
-      new Racing(
-        this.racingContainerDOM,
-        this.page,
-        this.limit,
-        arrCarsRace[i].id as number,
-        arrCarsRace[i].name as string,
-        arrCarsRace[i].color,
-      );
-    }
+  createRacingContainer() {
+    this.racingContainer = document.createElement('div');
+    this.racingContainer.classList.add('garage__content--racing');
+    this.garageContainerDOM.append(this.racingContainer);
+  }
+
+  renderTitleGarage() {
+    this.racingContainerDOM.insertAdjacentHTML('beforeend', this.createHTMLTitleGarage());
+  }
+
+  renderButtonPaginatin() {
+    this.garageContainerDOM.insertAdjacentHTML('beforeend', this.createHTMLButtonPagination());
+  }
+
+  createHTMLButtonPagination(): string {
+    return `<div class="garage__content--pagination">
+                ${renderButtonHTML('PREV', 'pagination--prev__btn', '', '')}
+                ${renderButtonHTML('NEXT', 'pagination--next__btn', '', '')}
+            </div>`;
+  }
+
+  createHTMLTitleGarage(): string {
+    return `<h3 class="racing__title">Garage ()</h3>
+            <h4 class="racing__page-number">Page #</h4>
+            <ul class="racing__list-cars"></ul>
+            `;
+  }
+
+  handlePagination() {
+    const paginationDOM = this.garageContainerDOM.querySelector('.garage__content--pagination') as HTMLElement;
+    const startRacingBtnDOM = document.querySelector('.race-control--race__btn') as HTMLButtonElement;
+    paginationDOM.addEventListener('click', async event => {
+      const allCars = (await loaderGarage.getCars()).length;
+      if (startRacingBtnDOM.disabled === true) {
+        resetRacing();
+      }
+      if (
+        (<HTMLElement>event.target).classList.contains(`pagination--next__btn`) &&
+        allCars / this.limit > saveValue.carsPage
+      ) {
+        saveValue.carsPage += 1;
+        asyncCreatRacing(saveValue.carsPage, this.limit);
+      }
+      if ((<HTMLElement>event.target).classList.contains(`pagination--prev__btn`) && saveValue.carsPage > 1) {
+        saveValue.carsPage -= 1;
+        asyncCreatRacing(saveValue.carsPage, this.limit);
+      }
+    });
+  }
+
+  async rerenderDOM() {
+    await asyncCreatRacing(this.page, this.limit);
+    this.handlePagination();
   }
 }

@@ -29,6 +29,6 @@ export class ControlPanel {
   createControlPanelContainer() {
     this.controlPanelContainer = document.createElement('div');
     this.controlPanelContainer.classList.add('garage__content--control-panel');
-    this.selector.append(this.controlPanelContainer);
+    this.selector.prepend(this.controlPanelContainer);
   }
 }

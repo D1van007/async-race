@@ -1,5 +1,6 @@
 import { Header } from '../header/header';
 import { GaragePage } from '../garage_page/page';
+import { WinnersPage } from '../winner/page';
 
 export class App {
   header: Header;
@@ -10,11 +11,14 @@ export class App {
 
   garagePage: GaragePage;
 
+  winnersPage: WinnersPage;
+
   constructor() {
     this.parent = document.querySelector('.body__container') as HTMLElement;
     this.header = new Header(this.parent);
     this.creatMainContainer();
     this.garagePage = new GaragePage();
+    this.winnersPage = new WinnersPage();
   }
 
   creatMainContainer() {
