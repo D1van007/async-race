@@ -13,7 +13,6 @@ export async function saveWinner(winner: IWinner) {
   // console.log(winner);
   // console.log(archiveWinner);
   if (archiveWinners.some(e => e.id === Number(winner.id))) {
-    console.log('ds');
     const archiveWinner = await loaderWinners.getWinner(winner.id);
     const bestWinner = [archiveWinner, winner].sort((a: IWinner, b: IWinner) => a.time - b.time)[0];
     console.log(bestWinner);

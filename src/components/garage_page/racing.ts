@@ -5,6 +5,7 @@ import { carPicture } from './svg_car';
 // eslint-disable-next-line import/no-cycle
 import { loaderWinners } from '../loader/loaderWinners';
 // eslint-disable-next-line import/no-cycle
+import imgFlag from '../../assets/flagNew.png';
 import { drivePromice, Engine, errorCallback, ICarProperties } from '../../types';
 import { loaderEngine } from '../loader/loaderEngine';
 import { loaderGarage } from '../loader/loaderGarage';
@@ -89,10 +90,11 @@ export class Racing {
                     ${renderButtonHTML('A', `car__btn--a`, `car__btn--a-${this.id}`)}
                     ${renderButtonHTML('B', `car__btn--b`, `car__btn--b-${this.id}`, 'disabled')}
                     ${carPicture('car__picture', this.color, `car__picture-${this.id}`)}
-                    <img class="car__flag" alt="flag" src="src/assets/flagNew.png">
+                    <img class="car__flag" alt="flag" src="${imgFlag}">
                 </div>
             </li>`;
   }
+
 
   initDOMElement() {
     this.garageContainerDOM = document.querySelector('.garage__container') as HTMLElement;

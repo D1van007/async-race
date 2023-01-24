@@ -131,7 +131,7 @@ a {
 .winners__content--item,
 .winners__content--title {
   display: grid;
-  grid-template-columns: 0.3fr 1fr 2fr 0.5fr 1fr;
+  grid-template-columns: 0.3fr 1fr 1fr 0.5fr 1fr;
   width: 100%;
   align-items: center;
   justify-items: center;
@@ -143,4 +143,16 @@ a {
   gap: 1rem;
   justify-content: center;
   margin: 2rem auto;
+}
+.winner__imgCar,
+.winner__wins,
+.winner__best-time {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
+  cursor: pointer;
+}
+.arrowNameRotate {
+  transform: rotate(180deg);
 }

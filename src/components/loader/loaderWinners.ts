@@ -25,12 +25,12 @@ class LoaderWinners {
     this.paramsOrder = '_order';
   }
 
-  async getWinners(page?: number, limit?: number, sort?: number, order?: number): Promise<IWinner[]> {
+  async getWinners(page?: number, limit?: number, sort?: string, order?: string): Promise<IWinner[]> {
     try {
       const response: Response = await fetch(
         `${this.serverPath}${this.winners}${
           page || limit ? `?${this.paramsPage}=${page}&${this.paramsLimit}=${limit}` : ''
-        }${sort ? `?${this.paramsSort}=${sort}` : ''}${order ? `?${this.paramsOrder}=${order}` : ''}`,
+        }${sort ? `&${this.paramsSort}=${sort}` : ''}${order ? `&${this.paramsOrder}=${order}` : ''}`,
       );
       const winnersData = await response.json();
       return winnersData;
