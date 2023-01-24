@@ -1,6 +1,6 @@
-// eslint-disable-next-line import/no-cycle
 import { loaderGarage } from '../loader/loaderGarage';
 import { Racing } from './racing';
+// eslint-disable-next-line import/no-absolute-path
 
 // eslint-disable-next-line import/no-mutable-exports
 export let arrInstanceRacing: Racing[] = [];
@@ -31,6 +31,7 @@ export async function asyncCreatRacing(page: number, limit: number) {
       arrCarsRace[i].name as string,
       arrCarsRace[i].color,
     );
+
     arrInstanceRacing.push(racingInstance);
   }
 }

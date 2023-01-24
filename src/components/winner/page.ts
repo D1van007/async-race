@@ -26,6 +26,7 @@ export class WinnersPage {
     this.renderButtonPaginatin();
     this.tableWinners = new TableWinners(saveValue.winnersPage, saveValue.winnersLimit);
     this.handlePagination();
+    this.hadlerWinners();
   }
 
   createWinnersPage() {
@@ -50,9 +51,17 @@ export class WinnersPage {
   }
 
   createHTMLContentWinners(): string {
-    return `<h3 class="winners__content--title">Winners ()</h3>
+    return `<h3 class="winners__content--amount">Winners ()</h3>
             <h4 class="winners__content--page-number">Page #</h4>
-            <ul class="winners__content--table"></ul>
+            <div class="winners__content--title">
+                <h3 >Number</h3>
+                <h3 class="winner__imgCar">Car <span class="arrow"><i class="fa-solid fa-arrow-down"></i><span></h3>
+                <h3 class="winner__name">Name</h3>
+                <h3 class="winner__wins">Wins <span class="arrow"><i class="fa-solid fa-arrow-down"></i><span></h3>
+                <h3 class="winner__best-time">Best time (s) <span class="arrow"><i class="fa-solid fa-arrow-down"></i><span></h3>
+            </div>
+            <ul class="winners__content--table">
+            </ul>
             `;
   }
 
@@ -77,18 +86,52 @@ export class WinnersPage {
     });
   }
 
-  //   async rerenderDOM() {
-  //     // ['ASC'|'DESC']
-  //     // ['id'|'wins'|'time']
+  //   .winner__name,
+  // .winner__wins-amount,
+  // .winner__best-time
+  // ['ASC'|'DESC']
+  // ['id'|'wins'|'time']
+  hadlerWinners() {
+    const carWinnerDOM = this.winnersContainerDOM.querySelector('.winner__imgCar') as HTMLElement;
+    const carArrow = carWinnerDOM.querySelector('.arrow') as HTMLElement;
+    carWinnerDOM.addEventListener('click', () => {
+      if (carArrow.style.transform === 'rotate(180deg)') {
+        carArrow.style.transform = 'rotate(0deg)';
+        // eslint-disable-next-line no-new
+        new TableWinners(saveValue.winnersPage, saveValue.winnersLimit, 'id', 'ASC');
+      } else {
+        carArrow.style.transform = 'rotate(180deg)';
+        // eslint-disable-next-line no-new
+        new TableWinners(saveValue.winnersPage, saveValue.winnersLimit, 'id', 'DESC');
+      }
+    });
+        const winsWinnerDOM = this.winnersContainerDOM.querySelector('.winner__wins') as HTMLElement;
+        const winsArrow = winsWinnerDOM.querySelector('.arrow') as HTMLElement;
+        winsWinnerDOM.addEventListener('click', () => {
+          if (winsArrow.style.transform === 'rotate(180deg)') {
+            winsArrow.style.transform = 'rotate(0deg)';
+            // eslint-disable-next-line no-new
+            new TableWinners(saveValue.winnersPage, saveValue.winnersLimit, 'wins', 'ASC');
+          } else {
+            winsArrow.style.transform = 'rotate(180deg)';
+            // eslint-disable-next-line no-new
+            new TableWinners(saveValue.winnersPage, saveValue.winnersLimit, 'wins', 'DESC');
+          }
+        });
+            const timeWinnerDOM = this.winnersContainerDOM.querySelector('.winner__best-time') as HTMLElement;
+            const timeArrow = timeWinnerDOM.querySelector('.arrow') as HTMLElement;
+            timeWinnerDOM.addEventListener('click', () => {
+              if (timeArrow.style.transform === 'rotate(180deg)') {
+                timeArrow.style.transform = 'rotate(0deg)';
+                // eslint-disable-next-line no-new
+                new TableWinners(saveValue.winnersPage, saveValue.winnersLimit, 'time', 'ASC');
+              } else {
+                timeArrow.style.transform = 'rotate(180deg)';
+                // eslint-disable-next-line no-new
+                new TableWinners(saveValue.winnersPage, saveValue.winnersLimit, 'time', 'DESC');
+              }
+            });
+  }
 
-  //     const winnerHaedTableDOM = this.winnersContainerDOM.querySelector('.winners__content--title') as HTMLElement;
-  //     winnerHaedTableDOM.addEventListener('click', event => {
-  //       if (
-  //         (<HTMLElement>event.target).classList.contains(`winner__name`)){
-  //             let isASC = true
-  // new TableWinners(saveValue.winnersPage, saveValue.winnersLimit, 'id');
-  //         })
-  //     const nameWinnerDOM = this.winnersContainerDOM.querySelector('.winner-__name') as HTMLElement;
-  //     const nameWinnerDOM = this.winnersContainerDOM.querySelector('.winner-__name') as HTMLElement;
-  //   }
+  async rerenderMethods() {}
 }
