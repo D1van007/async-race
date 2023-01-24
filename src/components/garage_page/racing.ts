@@ -95,7 +95,6 @@ export class Racing {
             </li>`;
   }
 
-
   initDOMElement() {
     this.garageContainerDOM = document.querySelector('.garage__container') as HTMLElement;
     this.racingLine = document.getElementById(`${this.id}`) as HTMLElement;
