@@ -50,7 +50,7 @@ export class WinnersPage {
   }
 
   createHTMLContentWinners(): string {
-    return `<h3 class="winners__content--title">Winners ()</h3>
+    return `<h3 class="winners__content--amount">Winners ()</h3>
             <h4 class="winners__content--page-number">Page #</h4>
             <ul class="winners__content--table"></ul>
             `;
