@@ -62,7 +62,7 @@ export class Racing {
                     ${renderButtonHTML('A', `car__btn--a`, `car__btn--a-${this.id}`)}
                     ${renderButtonHTML('B', `car__btn--b`, `car__btn--b-${this.id}`, 'disabled')}
                     ${carPicture('car__picture', this.color, `car__picture-${this.id}`)}
-                    <img class="car__flag"  src="src/assets/racing_flag.svg">
+                    <img class="car__flag" alt="flag" src="src/assets/flagNew.png">
                 </div>
             </li>`;
     }
