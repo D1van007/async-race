@@ -27,14 +27,18 @@ export class Header {
     garagePageBtnDOM?.addEventListener('click', () => {
       const garageContainer = document.querySelector('.garage__container') as HTMLElement;
       const winnersContainer = document.querySelector('.winners__container') as HTMLElement;
-      garageContainer.style.display = 'block';
-      winnersContainer.style.display = 'none';
+      garageContainer.style.zIndex = '10';
+      garageContainer.style.opacity = '1';
+      winnersContainer.style.zIndex = '-10';
+      winnersContainer.style.opacity = '0';
     });
     winnersPageBtnDOM?.addEventListener('click', () => {
       const garageContainer = document.querySelector('.garage__container') as HTMLElement;
       const winnersContainer = document.querySelector('.winners__container') as HTMLElement;
-      garageContainer.style.display = 'none';
-      winnersContainer.style.display = 'block';
+      garageContainer.style.zIndex = '-10';
+      garageContainer.style.opacity = '0';
+      winnersContainer.style.zIndex = '10';
+      winnersContainer.style.opacity = '1';
     });
   }
 }
