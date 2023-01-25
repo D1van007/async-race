@@ -137,6 +137,7 @@ a {
 .winners__container {
   position: absolute;
   top: 2rem;
+  width: 100%;
   opacity: 0;
   z-index: -10;
 }
